@@ -1,64 +1,67 @@
 import praw
 import pandas as pd
 
-#The first step is dedicated to setting the credentials necessary to query the API and scrape r/wallstreetbets
-#this section is created following the official praw guide available at: https://praw.readthedocs.io/en/stable/getting_started/quick_start.html
+class RedditScraper:
+    # Initializes the RedditScraper class with API credentials, subreddit name, and number of posts to scrape
+    def __init__(self, client_id, client_secret,user_agent, subreddit_name, num_posts):
+        # Creates a Reddit API connection using the provided client credentials
+        self.reddit = praw.Reddit(
+            client_id = client_id,
+            client_secret = client_secret,
+            user_agent = user_agent
+        )
+        # Stores the subreddit name and number of posts to scrape as instance variables
+        self.subreddit_name = subreddit_name
+        self.num_posts = num_posts
+        # Initializes empty DataFrames to store posts and comments data
+        self.posts_df = pd.DataFrame()
+        self.comments_df = pd.DataFrame()
 
-reddit = praw.Reddit(
-    client_id = 'IlozIqdb7QyZ0N-BskbGOQ',
-    client_secret = 'Bmek46b7v4OKSzsDToati-83Jf1bnA',
-    user_agent = 'windows:IlozIqdb7QyZ0N-BskbGOQ:v0.1 (by u/_Domenico)'
-)
-#as explained in the guide, a username and password are needed for authentication only when you need to analyze private comments
-#this project will only take into consideration public comments, so that step is left out
+    # function that scrapes posts from the specified subreddit
+    def scrape_posts(self):
+        posts_data = [] # creating an empty list that will store each post's data as a dictionary
 
-#storing within a var the name of the subreddit from which posts need to be extracted
-subreddit_name = 'wallstreetbets'
-subreddit = reddit.subreddit(subreddit_name)
+        # loops through hot posts in the specified subreddit, limited by num_posts
+        for post in self.reddit.subreddit(self.subreddit_name).hot(limit = self.num_posts):
+            posts_data.append({
+                'post_id': post.id,
+                'created_utc': post.created_utc,
+                'title': post.title,
+                'selftext': post.selftext,
+                'score': post.score,
+                'num_comments': post.num_comments
+            })
 
-#creating a variable that indicates how many posts need to be extracted
-posts_num = 500
+        # converts the list of dictionaries into a DataFrame
+        self.posts_df = pd.DataFrame(posts_data)
+        return self.posts_df
 
-#creating an empty list that will be used to store the scraped data
-posts_data = []
+    # function that scrapes comments for each post in the specified subreddit
+    def scrape_comments(self):
+        comments_data = []  # creating an empty list that will store each comments data as a dictionary
 
-#for loop that extracts the posts data
-for post in subreddit.hot(limit = posts_num):
-    posts_data.append({
-        'post_id' : post.id,
-        'created_utc' : post.created_utc,
-        'title' : post.title,
-        'selftext' : post.selftext,
-        'score' : post.score,
-        'num_comments' : post.num_comments
-    })
+        # loops through hot posts to gather comments in the specified subreddit, limited by num_posts
+        for post in self.reddit.subreddit(self.subreddit_name).hot(limit=self.num_posts):
+            post.comments.replace_more(limit=0) # expands all comments loops through them
+            for comment in post.comments.list():
+                comments_data.append({
+                    'post_id': post.id,
+                    'comment_id': comment.id,
+                    'created_utc': comment.created_utc,
+                    'body': comment.body,
+                    'score': comment.score
+                })
 
-#creating a dataframe using pandas that will contain the values of the previously created list (which contains the reddit posts)
-posts_df = pd.DataFrame(posts_data)
+        # converts the list of dictionaries into a DataFrame
+        self.comments_df = pd.DataFrame(comments_data)
+        return self.comments_df
 
-#saving the data extracted into a .csv file for processing
-posts_df.to_csv('reddit_posts.csv', index = False)
+    #function that saves scraped posts data into a .csv file
+    def save_posts(self, filename='reddit_posts.csv'):
+        self.posts_df.to_csv(filename, index=False)
 
-#for the sake of this project, I've also decided to extract the comments of the posts.
-#this is a way to include more data as the recent api terms of service no longer allow me to pull data from a specific time frame
+    # function that saves scraped comments data into a .csv file
+    def save_comments(self, filename='reddit_comments.csv'):
+        self.comments_df.to_csv(filename, index=False)
 
-#creating the empty list to store scraped comments data
-comments_data = []
 
-#for loop that extracts the comments data
-for post in subreddit.hot(limit = posts_num):
-    post.comments.replace_more(limit = 0)
-    for comment in post.comments.list():
-        comments_data.append({
-            'post_id': post.id,
-            'comment_id': comment.id,
-            'created_utc': comment.created_utc,
-            'body': comment.body,
-            'score': comment.score
-        })
-
-#creation of the pandas dataframe that will contain the data from the list
-comments_df = pd.DataFrame(comments_data)
-
-#saving the data onto a separate csv file for processing
-comments_df.to_csv('reddit_comments.csv', index = False)
