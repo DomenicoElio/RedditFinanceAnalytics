@@ -1,48 +1,50 @@
-import re
 import pandas as pd
 import yfinance as yf
-from subReddit_Scraper import posts_df
 
-# # Combine titles and bodies of posts
-# posts_df['text'] = posts_df['title'] + ' ' + posts_df['selftext']
-#
-# # Define the tickers for Ethereum and Bitcoin, the two stocks that this project aims to track
-# desired_tickers = {'BTC', 'ETH'}
-#
-# # List to save the tickers found
-# tickers = []
-#
-# for text in posts_df['text']:
-#     # Find all tickers in the text
-#     found_tickers = re.findall(r'\b[A-Z]{1,5}\b', text)
-#     # Keep only the desired tickers (ETH and BTC)
-#     found_tickers = [ticker for ticker in found_tickers if ticker in desired_tickers]
-#     tickers.extend(found_tickers)
-#
-# # Remove duplicates
-# unique_tickers = set(tickers)
-# print(f'Tickers found: {unique_tickers}')
+class FinanceScraper:
+    """
+    Class to scrape historical financial data for a list of stock tickers using yfinance.
+    The initial idea, as testified by earlier pushes, was to extract a list of tickers from the data scraped from reddit,
+    This first approach has been abandoned, but the infrastructure created to make it work remains the same, as it also works
+    by manually passing the ticker for which data needs to be extracted
+    """
+    def __init__(self, tickers, start_date, end_date):
+        #Initialize the FinanceScraper with a list of tickers and a date range.
+        self.tickers= tickers,
+        self.start_date = start_date
+        self.end_date = end_date
+        self.stock_data_df = pd.DataFrame() # Create an empty DataFrame to store the scraped stock data
 
-# defines the date interval for which financial data needs to be scraped
-start_date = '2024-01-01'
-end_date = '2024-06-30'
+    def scrape_financial_data(self):
+        #Scrape financial data for each ticker in the list over the specified date range.
 
-# list that will contain all the financial data scraped
-financial_data = []
+        financial_data = [] # Initialize an empty list to hold financial data for each ticker
 
-for ticker in unique_tickers:
-    try:
-        stock = yf.Ticker(ticker)
-        hist = stock.history(start=start_date, end=end_date)
-        hist.reset_index(inplace=True)
-        hist['Ticker'] = ticker
-        financial_data.append(hist)
-    except Exception as e:
-        print(f'Errore con il ticker {ticker}: {e}')
+        # Loop through each ticker symbol in the list (the ticker is in this case only one as previously commented)
+        for ticker in self.tickers:
+            try:
+                stock = yf.Ticker(ticker)   # Create a Ticker object using yfinance for the given ticker symbol
+                hist = stock.history(start = self.start_date, end = self.end_date)  # Fetch historical market data for the specified date range
+                if not hist.empty:
+                    hist.reset_index(inplace = True)
+                    hist['Ticker'] = ticker # Add a new column to indicate the ticker symbol
+                    financial_data.append(hist) # Append the DataFrame to the financial_data list
+            except Exception as e:
+                # Print an error message if there's an issue fetching data for the ticker
+                print(f'No financial data available for the following Stock Ticker: {ticker}')
 
-# Concatenation  of all the dataframes
-if financial_data:
-    stock_data_df = pd.concat(financial_data)
-    stock_data_df.to_csv('stock_data.csv', index=False)
-else:
-    print('Nessun dato finanziario disponibile.')
+        # Check if any financial data was retrieved
+        if financial_data:
+            self.stock_data_df = pd.concat(financial_data, ignore_index=True)
+            return self.stock_data_df
+        else:
+            print('No financial data available')
+            return pd.DataFrame()
+
+    def save_financial_data(self, filename = 'stock_data.csv'):
+        #Save the scraped financial data to a CSV file.
+        if not self.stock_data_df.empty:
+            self.stock_data_df.to_csv(filename, index=False)
+        else:
+            print('No data available to save within the DF.')
+

@@ -1,4 +1,5 @@
 from subReddit_Scraper import RedditScraper
+from yfinance_Scraper import FinanceScraper
 
 # configuration of the credentials necessary to query the reddit api
 client_id = 'IlozIqdb7QyZ0N-BskbGOQ'
@@ -21,3 +22,21 @@ reddit_scraper.save_posts()
 # extraction of the comments and comments saved
 reddit_scraper.scrape_comments()
 reddit_scraper.save_comments()
+
+#setting the value of the tickers that I want to search for on yfinance
+tickers = "GME"
+
+#setting the start and end date parameters that indicate the time interval for which data needs to be pulled
+start_date = '2023-08-31'
+end_date = '2024-08-31'
+
+#creating an instance of FinanceScraper
+finance_scraper = FinanceScraper(
+    tickers = tickers,
+    start_date=start_date,
+    end_date=end_date
+)
+
+#extraction and saving into a .csv file of the financial data
+finance_scraper.scrape_financial_data()
+finance_scraper.save_financial_data()
