@@ -31,5 +31,30 @@ class SentimentAnalyzer:
         emotions = emotion.top_emotions
         return emotions
 
+    def analyze_posts(self):
+        """
+        Apply the 'analyze_sentiment' method to the 'cleaned_text' column of the posts DataFrame
+        This returns a tuple (sentiment_category, polarity_score) for each row
+        Use zip(*) to unzip the list of tuples into two separate lists and assign them to new columns
+        """
+        self.cleaned_posts_df['sentiment'], self.cleaned_posts_df['polarity'] = zip(
+            *self.cleaned_posts_df['cleaned_text'].apply(self.analyze_sentiment)
+        )
+        self.cleaned_posts_df['emotions'] = self.cleaned_posts_df['cleaned_text'].apply(self.analyze_emotions)
+        return self.cleaned_posts_df
 
+    def analyze_comments(self):
+        #this function applies the same steps as the previous one, to the comments
+        self.cleaned_comments_df['sentiment'], self.cleaned_comments_df['polarity'] = zip(
+            *self.cleaned_comments_df['cleaned_text'].apply(self.analyze_sentiment)
+        )
+        self.cleaned_comments_df['emotions'] = self.cleaned_comments_df['cleaned_text'].apply(self.analyze_emotions)
+        return self.cleaned_comments_df
 
+    def save_analyzed_data(self, posts_filename='analyzed_posts.csv', comments_filename='analyzed_comments.csv'):
+        # checks if the analyzed posts DataFrame is not empty before saving to the relative .csv file
+        if not self.cleaned_posts_df.empty:
+            self.cleaned_posts_df.to_csv(posts_filename, index=False)
+        # checks if the analyzed comments DataFrame is not empty before saving to the relative .csv file
+        if not self.cleaned_comments_df.empty:
+            self.cleaned_comments_df.to_csv(comments_filename, index=False)

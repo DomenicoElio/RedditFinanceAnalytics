@@ -18,8 +18,17 @@ def main():
     # saving cleaned data into the relative .csv files
     data_cleaner.save_cleaned_data()
 
-    # #creation of the instance of Sentiment Analyzer
-    # sentiment_analyzer = SentimentAnalyzer(cleaned_posts_df, cleaned_comments_df)
+    #creation of the instance of Sentiment Analyzer
+    sentiment_analyzer = SentimentAnalyzer(cleaned_posts_df, cleaned_comments_df)
+
+    # analysis of sentiments and emotions on the posts
+    analyzed_posts_df = sentiment_analyzer.analyze_posts()
+
+    # analysis of sentiments and emotions on the comments
+    analyzed_comments_df = sentiment_analyzer.analyze_comments()
+
+    # saving analyzed data
+    sentiment_analyzer.save_analyzed_data()
 
 if __name__ == '__main__':
     # executing all the steps for data cleaning
