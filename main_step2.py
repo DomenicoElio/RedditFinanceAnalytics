@@ -1,5 +1,7 @@
 import pandas as pd
 from data_cleaner import DataCleaner
+from sentiment_analyzer import SentimentAnalyzer
+
 
 def main():
     # loading the data extracted in step1 (scraped reddit data)
@@ -15,6 +17,9 @@ def main():
 
     # saving cleaned data into the relative .csv files
     data_cleaner.save_cleaned_data()
+
+    # #creation of the instance of Sentiment Analyzer
+    # sentiment_analyzer = SentimentAnalyzer(cleaned_posts_df, cleaned_comments_df)
 
 if __name__ == '__main__':
     # executing all the steps for data cleaning
