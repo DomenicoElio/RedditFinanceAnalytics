@@ -1,6 +1,7 @@
 import pandas as pd
 from data_cleaner import DataCleaner
 from sentiment_analyzer import SentimentAnalyzer
+from topic_modeler import TopicModeler
 
 
 def main():
@@ -29,6 +30,34 @@ def main():
 
     # saving analyzed data
     sentiment_analyzer.save_analyzed_data()
+
+    # topic modeling on cleaned posts
+    cleaned_texts = cleaned_posts_df['cleaned_text'].tolist()
+    topic_modeler = TopicModeler(cleaned_texts, num_topics=5)
+
+    # preprocessing and creation of the dictionary and corpus
+    tokenized_texts = topic_modeler.preprocess_texts()
+    topic_modeler.create_dictionary_corpus(tokenized_texts)
+
+    # definition of the lda model
+    lda_model = topic_modeler.build_lda_model()
+
+    # visualization of the topics
+    topic_modeler.display_topics()
+
+    # # topic modeling on cleaned comments
+    # cleaned_texts = cleaned_comments_df['cleaned_text'].tolist()
+    # topic_modeler = TopicModeler(cleaned_texts, num_topics=5)
+    #
+    # # preprocessing and creation of the dictionary and corpus
+    # tokenized_texts = topic_modeler.preprocess_texts()
+    # topic_modeler.create_dictionary_corpus(tokenized_texts)
+    #
+    # # definition of the lda model
+    # lda_model = topic_modeler.build_lda_model()
+    #
+    # # visualization of the topics
+    # topic_modeler.display_topics()
 
 if __name__ == '__main__':
     # executing all the steps for data cleaning
