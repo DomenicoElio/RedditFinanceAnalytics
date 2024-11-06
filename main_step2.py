@@ -3,7 +3,6 @@ from data_cleaner import DataCleaner
 from sentiment_analyzer import SentimentAnalyzer
 from topic_modeler import TopicModeler
 
-
 def main():
     # loading the data extracted in step1 (scraped reddit data)
     posts_df = pd.read_csv('reddit_posts.csv')

@@ -3,7 +3,6 @@ from textblob import TextBlob
 from nrclex import NRCLex
 from textblob.en import sentiment
 
-
 class SentimentAnalyzer:
     def __init__(self, cleaned_posts_df, cleaned_comments_df):
     # Initialize the sentiment analyzer with the posts and comments df obtained in data cleaning
