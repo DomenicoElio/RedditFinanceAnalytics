@@ -56,7 +56,7 @@ def main():
     #
     # # definition of the lda model
     # lda_model = topic_modeler.build_lda_model()
-    #
+
     # # visualization of the topics
     # topic_modeler.display_topics()
 

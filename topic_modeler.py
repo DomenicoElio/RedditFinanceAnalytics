@@ -86,4 +86,3 @@ class TopicModeler:
         for doc in self.corpus:
             doc_topics.append(self.lda_model.get_document_topics(doc))
         return doc_topics
-
