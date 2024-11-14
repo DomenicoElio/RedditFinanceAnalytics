@@ -22,46 +22,57 @@ class RedditScraper:
         posts_data = [] # creating an empty list that will store each post's data as a dictionary
 
         # loops through hot posts in the specified subreddit, limited by num_posts
-        for post in self.reddit.subreddit(self.subreddit_name).hot(limit = self.num_posts):
+        for post in self.reddit.subreddit(self.subreddit_name).hot(limit=self.num_posts):
             posts_data.append({
                 'post_id': post.id,
                 'created_utc': post.created_utc,
                 'title': post.title,
                 'selftext': post.selftext,
                 'score': post.score,
-                'num_comments': post.num_comments
+                'num_comments': post.num_comments,
+            })
+
+        # loops through top posts in the specified subreddit, limited by num_posts
+        for post in self.reddit.subreddit(self.subreddit_name).top(limit=self.num_posts):
+            posts_data.append({
+                'post_id': post.id,
+                'created_utc': post.created_utc,
+                'title': post.title,
+                'selftext': post.selftext,
+                'score': post.score,
+                'num_comments': post.num_comments,
             })
 
         # converts the list of dictionaries into a DataFrame
         self.posts_df = pd.DataFrame(posts_data)
         return self.posts_df
 
-    # function that scrapes comments for each post in the specified subreddit
-    def scrape_comments(self):
-        comments_data = []  # creating an empty list that will store each comments data as a dictionary
-
-        # loops through hot posts to gather comments in the specified subreddit, limited by num_posts
-        for post in self.reddit.subreddit(self.subreddit_name).hot(limit=self.num_posts):
-            post.comments.replace_more(limit=0) # expands all comments loops through them
-            for comment in post.comments.list():
-                comments_data.append({
-                    'post_id': post.id,
-                    'comment_id': comment.id,
-                    'created_utc': comment.created_utc,
-                    'body': comment.body,
-                    'score': comment.score
-                })
-
-        # converts the list of dictionaries into a DataFrame
-        self.comments_df = pd.DataFrame(comments_data)
-        return self.comments_df
+    # # function that scrapes comments for each post in the specified subreddit
+    # def scrape_comments(self):
+    #     comments_data = []  # creating an empty list that will store each comments data as a dictionary
+    #
+    #     # loops through hot posts to gather comments in the specified subreddit, limited by num_posts
+    #     for post in self.reddit.subreddit(self.subreddit_name).hot(limit=self.num_posts):
+    #         post.comments.replace_more(limit=0) # expands all comments loops through them
+    #         for comment in post.comments.list():
+    #             comments_data.append({
+    #                 'post_id': post.id,
+    #                 'comment_id': comment.id,
+    #                 'created_utc': comment.created_utc,
+    #                 'body': comment.body,
+    #                 'score': comment.score
+    #             })
+    #
+    #     # converts the list of dictionaries into a DataFrame
+    #     self.comments_df = pd.DataFrame(comments_data)
+    #     return self.comments_df
 
     #function that saves scraped posts data into a .csv file
     def save_posts(self, filename='reddit_posts.csv'):
         self.posts_df.to_csv(filename, index=False)
 
-    # function that saves scraped comments data into a .csv file
-    def save_comments(self, filename='reddit_comments.csv'):
-        self.comments_df.to_csv(filename, index=False)
+    # # function that saves scraped comments data into a .csv file
+    # def save_comments(self, filename='reddit_comments.csv'):
+    #     self.comments_df.to_csv(filename, index=False)
 
 

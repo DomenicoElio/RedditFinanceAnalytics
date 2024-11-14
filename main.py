@@ -12,23 +12,23 @@ reddit_scraper = RedditScraper(
     client_secret=client_secret,
     user_agent=user_agent,
     subreddit_name='wallstreetbets',
-    num_posts=250
+    num_posts=1000
 )
 
 # extraction of the posts and posts saved
 reddit_scraper.scrape_posts()
 reddit_scraper.save_posts()
 
-# extraction of the comments and comments saved
-reddit_scraper.scrape_comments()
-reddit_scraper.save_comments()
+# # extraction of the comments and comments saved
+# reddit_scraper.scrape_comments()
+# reddit_scraper.save_comments()
 
 #setting the value of the tickers that I want to search for on yfinance
-tickers = "GME"
+tickers = "TSLA"
 
 #setting the start and end date parameters that indicate the time interval for which data needs to be pulled
-start_date = '2023-08-31'
-end_date = '2024-08-31'
+start_date = '2023-10-31'
+end_date = '2024-10-31'
 
 #creating an instance of FinanceScraper
 finance_scraper = FinanceScraper(
