@@ -12,13 +12,13 @@ nltk.download('punkt')
 nltk.download('punkt_tab')
 
 class DataCleaner:
-    def __init__(self, posts_df, comments_df):
+    def __init__(self, posts_df): #removed (self, posts_df, comments_df) as comments are no longer used
         # Initialize the FinanceScraper with the posts and comments df to which the relative .csv files will be assigned for analysis
         self.posts_df = posts_df
-        self.comments_df = comments_df
+        # self.comments_df = comments_df
         # creates two new empty dataframes to fill with the data once cleaned
         self.cleaned_posts_df = pd.DataFrame()
-        self.cleaned_comments_df = pd.DataFrame()
+        # self.cleaned_comments_df = pd.DataFrame()
         self.stop_words = set(stopwords.words('english'))
 
     def clean_text(self, text):
@@ -56,15 +56,20 @@ class DataCleaner:
         self.cleaned_posts_df = self.posts_df
         return self.cleaned_posts_df
 
-    def clean_comments(self):
-        #the issue with nans doesn't really present itself in the comments
-        self.comments_df['cleaned_text'] = self.comments_df['body'].apply(self.clean_text)
-        self.cleaned_comments_df = self.comments_df
-        return self.cleaned_comments_df
+    # def clean_comments(self):
+    #     #the issue with nans doesn't really present itself in the comments
+    #     self.comments_df['cleaned_text'] = self.comments_df['body'].apply(self.clean_text)
+    #     self.cleaned_comments_df = self.comments_df
+    #     return self.cleaned_comments_df
 
-    def save_cleaned_data(self, posts_filename='cleaned_posts.csv', comments_filename='cleaned_comments.csv'):
-        #saving the cleaned posts and comments into their relative .csv files
+    def save_cleaned_data(self, posts_filename='cleaned_posts.csv'):
+        #saving the cleaned posts into the relative .csv file
         if not self.cleaned_posts_df.empty:
             self.cleaned_posts_df.to_csv(posts_filename, index=False)
-        if not self.cleaned_comments_df.empty:
-            self.cleaned_comments_df.to_csv(comments_filename, index=False)
+
+    # def save_cleaned_data(self, posts_filename='cleaned_posts.csv', comments_filename='cleaned_comments.csv'):
+    #     #saving the cleaned posts and comments into their relative .csv files
+    #     if not self.cleaned_posts_df.empty:
+    #         self.cleaned_posts_df.to_csv(posts_filename, index=False)
+    #     if not self.cleaned_comments_df.empty:
+    #         self.cleaned_comments_df.to_csv(comments_filename, index=False)

@@ -3,9 +3,11 @@ import gensim
 from gensim import corpora
 from nltk.tokenize import word_tokenize
 import nltk
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 # Download the 'punkt' tokenizer for NLTK
-nltk.download('punkt')
+#nltk.download('punkt')
 
 class TopicModeler:
     def __init__(self, cleaned_texts, num_topics = 5):
@@ -43,10 +45,40 @@ class TopicModeler:
         return self.lda_model
 
     def display_topics(self):
-        # retrieve the topics along with their top words (this will potentially dictate the selection of the tickers for the yfinance scrape)
-        topics = self.lda_model.print_topics(num_words=5)
-        for idx, topic in topics:
-            print(f'Topics {idx+1}: {topic}')
+        # ensuring that the dictionary is available
+        if self.dictionary is None:
+            print("Dictionary is not available.")
+            return
+
+        for idx in range(self.num_topics):
+            # gets the topic terms
+            topic = self.lda_model.get_topic_terms(topicid=idx, topn=5)
+            print(f'\nTopic {idx}:')
+            print('Raw topic data:', topic)
+
+            # converts word IDs to words
+            topic_dict = {}
+            for word_id, weight in topic:
+                word = self.dictionary[word_id]
+                topic_dict[word] = weight
+            print('Topic dictionary:', topic_dict)
+
+            # generates a word cloud from the word frequencies
+            if topic_dict:
+                wordcloud = WordCloud(
+                    width=800,
+                    height=400,
+                    background_color='white'
+                ).generate_from_frequencies(topic_dict)
+
+                # displays the generated word-could
+                plt.figure(figsize=(10, 5))
+                plt.imshow(wordcloud, interpolation='bilinear')
+                plt.axis('off')
+                plt.title(f'Topic {idx} Word Cloud')
+                plt.show()
+            else:
+                print("No valid terms found for this topic.")
 
     def get_document_topics(self):
         # initialize a list to hold the topic distribution for each document

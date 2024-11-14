@@ -4,10 +4,10 @@ from nrclex import NRCLex
 from textblob.en import sentiment
 
 class SentimentAnalyzer:
-    def __init__(self, cleaned_posts_df, cleaned_comments_df):
+    def __init__(self, cleaned_posts_df): #removed (self, cleaned_posts_df, cleaned_comments_df)
     # Initialize the sentiment analyzer with the posts and comments df obtained in data cleaning
         self.cleaned_posts_df = cleaned_posts_df
-        self.cleaned_comments_df = cleaned_comments_df
+        #self.cleaned_comments_df = cleaned_comments_df
 
     def analyze_sentiment(self, text):
         # create a TextBlob object from the input text
@@ -42,18 +42,18 @@ class SentimentAnalyzer:
         self.cleaned_posts_df['emotions'] = self.cleaned_posts_df['cleaned_text'].apply(self.analyze_emotions)
         return self.cleaned_posts_df
 
-    def analyze_comments(self):
-        #this function applies the same steps as the previous one, to the comments
-        self.cleaned_comments_df['sentiment'], self.cleaned_comments_df['polarity'] = zip(
-            *self.cleaned_comments_df['cleaned_text'].apply(self.analyze_sentiment)
-        )
-        self.cleaned_comments_df['emotions'] = self.cleaned_comments_df['cleaned_text'].apply(self.analyze_emotions)
-        return self.cleaned_comments_df
+    # def analyze_comments(self):
+    #     #this function applies the same steps as the previous one, to the comments
+    #     self.cleaned_comments_df['sentiment'], self.cleaned_comments_df['polarity'] = zip(
+    #         *self.cleaned_comments_df['cleaned_text'].apply(self.analyze_sentiment)
+    #     )
+    #     self.cleaned_comments_df['emotions'] = self.cleaned_comments_df['cleaned_text'].apply(self.analyze_emotions)
+    #     return self.cleaned_comments_df
 
     def save_analyzed_data(self, posts_filename='analyzed_posts.csv', comments_filename='analyzed_comments.csv'):
         # checks if the analyzed posts DataFrame is not empty before saving to the relative .csv file
         if not self.cleaned_posts_df.empty:
             self.cleaned_posts_df.to_csv(posts_filename, index=False)
         # checks if the analyzed comments DataFrame is not empty before saving to the relative .csv file
-        if not self.cleaned_comments_df.empty:
-            self.cleaned_comments_df.to_csv(comments_filename, index=False)
+        # if not self.cleaned_comments_df.empty:
+        #     self.cleaned_comments_df.to_csv(comments_filename, index=False)
