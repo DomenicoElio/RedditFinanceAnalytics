@@ -24,7 +24,7 @@ def main():
     predictive_model.split_data()
     predictive_model.train_model()
     predictive_model.evaluate_model()
-    predictive_model.plot_results()
+    predictive_model.plot_confusion_matrix()
     predictive_model.feature_importance()
 
 if __name__ == '__main__':

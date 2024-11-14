@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
+
 class FeatureEngineering:
     def __init__(self, data):
         self.data = data
@@ -9,21 +10,23 @@ class FeatureEngineering:
         self.target = pd.Series()
 
     def create_features(self):
-        # creating characteristics based on Financial data
-        self.data['Return'] = self.data.groupby('Ticker')['Close'].pct_change()
-        self.data['Volatility'] = self.data.groupby('Ticker')['Close'].rolling(window=7).std().reset_index(level=0, drop=True)
-        # move single day sentiments to forecast future values
-        self.data['compound_shifted'] = self.data.groupby('Ticker')['compound'].shift(1)
-        self.data['neg_shifted'] = self.data.groupby('Ticker')['neg'].shift(1)
-        self.data['neu_shifted'] = self.data.groupby('Ticker')['neu'].shift(1)
-        self.data['pos_shifted'] = self.data.groupby('Ticker')['pos'].shift(1)
+        # creates characteristics based on financial data
+        self.data['Price_Direction'] = self.data.groupby('Ticker')['Close'].shift(-1) - self.data['Close']
+        # target var 1 if price rises, 0 if it remains unchanged or falls
+        self.data['Target'] = self.data['Price_Direction'].apply(lambda x: 1 if x > 0 else 0)
+
+        # # move single day sentiments to forecast future values
+        self.data['compound_shifted'] = self.data.groupby('Ticker')['compound'].shift(0)
+        self.data['neg_shifted'] = self.data.groupby('Ticker')['neg'].shift(0)
+        self.data['neu_shifted'] = self.data.groupby('Ticker')['neu'].shift(0)
+        self.data['pos_shifted'] = self.data.groupby('Ticker')['pos'].shift(0)
 
         # removing nans
         self.data.dropna(inplace=True)
 
         # defining characteristics and target
-        self.features = self.data[['compound_shifted', 'neg_shifted', 'neu_shifted', 'pos_shifted', 'Volatility', 'Volume']]
-        self.target = self.data['Return']
+        self.features = self.data[['compound_shifted', 'neg_shifted', 'neu_shifted', 'pos_shifted', 'Volume']]
+        self.target = self.data['Target']
 
     def scale_features(self):
         scaler = StandardScaler()
