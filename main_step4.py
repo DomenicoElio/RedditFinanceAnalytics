@@ -14,7 +14,7 @@ def main():
     merged_data = data_prep.merge_data()
     data_prep.save_merged_data()
 
-    # Feature Engineering
+    # feature engineering
     feature_eng = FeatureEngineering(merged_data)
     feature_eng.create_features()
     features, target = feature_eng.scale_features()

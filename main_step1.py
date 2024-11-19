@@ -16,32 +16,28 @@ def main():
         num_posts=1000
     )
 
-    # extraction of the posts and posts saved
+    # extraction and saving of the reddit posts
     reddit_scraper.scrape_posts()
     reddit_scraper.save_posts()
 
-    # # extraction of the comments and comments saved
-    # reddit_scraper.scrape_comments()
-    # reddit_scraper.save_comments()
-
-    #setting the value of the tickers that I want to search for on yfinance
+    # setting the value of the tickers that I want to search for on yfinance
     tickers = "TSLA"
 
-    #setting the start and end date parameters that indicate the time interval for which data needs to be pulled
+    # setting the start and end date parameters that indicates the time interval for which data needs to be pulled
     start_date = '2024-03-31'
     end_date = '2024-10-31'
 
-    #creating an instance of FinanceScraper
+    # creating an instance of FinanceScraper
     finance_scraper = FinanceScraper(
         tickers = tickers,
         start_date=start_date,
         end_date=end_date
     )
 
-    #extraction and saving into a .csv file of the financial data
+    # extracting financial data and saving it into a .csv file
     finance_scraper.scrape_financial_data()
     finance_scraper.save_financial_data()
 
 if __name__ == '__main__':
-    # executing all the steps for data cleaning
+
     main()

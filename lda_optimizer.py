@@ -16,21 +16,25 @@ class LDAOptimizer:
         self.coherences = []
 
     def preprocess_texts(self):
-        # tokenize each text in cleaned_texts after ensuring it's a string or bytes (nan were read as floats and caused the program to throw an error)
+        # tokenize each text in cleaned_texts after ensuring it's a string or bytes
         self.tokenized_texts = [
             word_tokenize(str(text)) for text in self.cleaned_texts if isinstance(text, (str, bytes))
         ]
 
     def create_dictionary_corpus(self):
-        # creates a dictionary representation of the tokenized texts
+        """
+        creates a dictionary representation of the tokenized texts and
+        converts tokenized texts to a Bag-of-Words corpus
+        """
         self.dictionary = corpora.Dictionary(self.tokenized_texts)
-        # converts tokenized texts to a Bag-of-Words corpus
         self.corpus = [self.dictionary.doc2bow(text) for text in self.tokenized_texts]
 
     def compute_coherence_values(self, start=2, limit=15, step=1):
-        # iterates over the range of topic numbers
+        """
+        iterates over the range of topic numbers, build LDA model with the current number of topics
+        and computes coherence score using the 'c_v' metric
+        """
         for num_topics in range(start, limit, step):
-            # build LDA model with the current number of topics
             model = gensim.models.LdaModel(
                 corpus=self.corpus,
                 id2word=self.dictionary,
@@ -42,7 +46,6 @@ class LDAOptimizer:
                 alpha='auto'
             )
             self.models.append(model)
-            # computes coherence score using the 'c_v' metric
             coherencemodel = CoherenceModel(
                 model=model,
                 texts=self.tokenized_texts,
@@ -54,7 +57,7 @@ class LDAOptimizer:
             print(f'Numero di topic: {num_topics}, Coerenza: {coherence:.4f}')
 
     def find_optimal_number_of_topics(self):
-        # find the maximum coherence score from the list
+        # finds the maximum coherence score from the list to determine the optimal number of topics
         max_coherence = max(self.coherences)
         optimal_index = self.coherences.index(max_coherence)
         optimal_model = self.models[optimal_index]
@@ -63,7 +66,7 @@ class LDAOptimizer:
         return optimal_model, optimal_num_topics
 
     def plot_coherence_values(self, start=2, limit=15, step=1):
-        # generates a range of topic numbers used
+        # generates a graph displaying the optimal number of topics
         x = range(start, limit, step)
         plt.plot(x, self.coherences)
         plt.xlabel("Numero di Topic")

@@ -28,14 +28,12 @@ def main():
     sentiments = sentiment_optimizer.analyze_sentiment_vader()
     analyzed_posts_df = sentiment_optimizer.add_sentiments_to_dataframe(cleaned_posts_df)
 
-    # saving data with updated sentiments
+    # saving data with updated sentiments & visualization of the distribution of the sentiments
     analyzed_posts_df.to_csv('optimized_analyzed_posts.csv', index=False)
-
-    # visualization of the distribution of the sentiments
     visualize_sentiments(analyzed_posts_df)
 
 def visualize_sentiments(analyzed_df):
-    #function used to visualize the sentiment distribution
+    # function used to visualize the sentiment distribution
     sentiment_counts = analyzed_df['sentiment'].value_counts()
     sentiment_counts.plot(kind='bar')
     plt.title('Distribuzione dei Sentimenti (VADER)')

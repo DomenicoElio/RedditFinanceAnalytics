@@ -3,37 +3,38 @@ import yfinance as yf
 
 class FinanceScraper:
     """
-    Class to scrape historical financial data for a list of stock tickers using yfinance.
-    The initial idea, as testified by earlier pushes, was to extract a list of tickers from the data scraped from reddit,
-    This first approach has been abandoned, but the infrastructure created to make it work remains the same, as it also works
-    by manually passing the ticker for which data needs to be extracted
+    class to scrape historical financial data for a list of stock tickers using yfinance.
+    a single ticker is passed manually on execution
     """
     def __init__(self, tickers, start_date, end_date):
-        #Initialize the FinanceScraper with a list of tickers and a date range.
+        """
+        initializes the FinanceScraper with a list of tickers and a date range
+        additionally, create an empty DataFrame to store the scraped stock data
+        """
         self.tickers= tickers,
         self.start_date = start_date
         self.end_date = end_date
-        self.stock_data_df = pd.DataFrame() # Create an empty DataFrame to store the scraped stock data
+        self.stock_data_df = pd.DataFrame()
 
     def scrape_financial_data(self):
-        #Scrape financial data for each ticker in the list over the specified date range.
+        """
+        scrapes financial data for each ticker over the specified date range.
+        The code is intended to also accept a list of tickers and extract data for each one
+        """
+        financial_data = []
 
-        financial_data = [] # Initialize an empty list to hold financial data for each ticker
-
-        # Loop through each ticker symbol in the list (the ticker is in this case only one as previously commented)
         for ticker in self.tickers:
             try:
-                stock = yf.Ticker(ticker)   # Create a Ticker object using yfinance for the given ticker symbol
-                hist = stock.history(start = self.start_date, end = self.end_date)  # Fetch historical market data for the specified date range
+                stock = yf.Ticker(ticker)
+                hist = stock.history(start = self.start_date, end = self.end_date)
                 if not hist.empty:
                     hist.reset_index(inplace = True)
-                    hist['Ticker'] = ticker # Add a new column to indicate the ticker symbol
-                    financial_data.append(hist) # Append the DataFrame to the financial_data list
+                    hist['Ticker'] = ticker
+                    financial_data.append(hist)
             except Exception as e:
-                # Print an error message if there's an issue fetching data for the ticker
                 print(f'No financial data available for the following Stock Ticker: {ticker}')
 
-        # Check if any financial data was retrieved
+        # checks if any financial data was retrieved
         if financial_data:
             self.stock_data_df = pd.concat(financial_data, ignore_index=True)
             return self.stock_data_df
@@ -42,7 +43,7 @@ class FinanceScraper:
             return pd.DataFrame()
 
     def save_financial_data(self, filename = 'stock_data.csv'):
-        #Save the scraped financial data to a CSV file.
+        # saves the scraped financial data to a CSV file.
         if not self.stock_data_df.empty:
             self.stock_data_df.to_csv(filename, index=False)
         else:

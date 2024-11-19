@@ -8,7 +8,7 @@ import seaborn as sns
 
 class PredictiveModel:
     def __init__(self, features, target):
-        # initializing the PredictiveModel with features and target variables
+        # initializes PredictiveModel with features and target variables
         self.features = features
         self.target = target
         self.model = None
@@ -19,7 +19,7 @@ class PredictiveModel:
         self.predictions = None
 
     def split_data(self, test_size=0.15, random_state=42):
-        # splits the dataset into training and testing sets
+        # splits the dataset into training and test sets
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             self.features,
             self.target,
@@ -34,7 +34,7 @@ class PredictiveModel:
         self.model.fit(self.X_train, self.y_train)
 
     def evaluate_model(self):
-        # making predictions on the test set and evaluating
+        # makes predictions on the test set and evaluates the results
         self.predictions = self.model.predict(self.X_test)
         accuracy = accuracy_score(self.y_test, self.predictions)
         precision = precision_score(self.y_test, self.predictions)
@@ -48,7 +48,7 @@ class PredictiveModel:
         print(classification_report(self.y_test, self.predictions))
 
     def plot_confusion_matrix(self):
-        # generate the confusion matrix and create heatmap
+        # generates the confusion matrix and creates a heatmap
         cm = confusion_matrix(self.y_test, self.predictions)
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
         plt.xlabel('Predicted')
@@ -57,7 +57,7 @@ class PredictiveModel:
         plt.show()
 
     def feature_importance(self):
-        # retrieve the feature importance from the trained model and visualize it
+        # retrieves the feature importance from the trained model and visualize it
         importance = self.model.feature_importances_
         features = self.X_train.columns
         importance_df = pd.DataFrame({'Feature': features, 'Importance': importance})
