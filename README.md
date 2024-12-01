@@ -1,47 +1,46 @@
 # Reddit Stock Sentiment Analysis #
 
-Il seguente progetto mira ad analizzare le emotions e i sentiment dei posts di un determinato subreddit presente all'interno del social network Reddit.
+This project aims to analyze the emotions and sentiments of posts from a specific subreddit on the social network Reddit.
 
 ### Obiettivo ###
 
-Il primo step ha come obiettivo l'estrazione dei post ed i titoli da un subreddit specifico per analizzare i sentimenti e le emozioni espressi. 
-Dopo aver ripulito i dati, indago se esiste una correlazione tra questi sentimenti ed emozioni (come hype, rabbia, tristezza, felicità) e il movimento dei titoli nel mercato azionario.
+The first step focuses on extracting posts and titles from a specific subreddit to analyze the expressed sentiments and emotions. 
+After cleaning the data, the goal is to investigate whether there is a correlation between these sentiments and emotions (such as hype, anger, sadness, happiness) and the movement of stock prices in the stock market.
 
 ### Struttura del progetto ###
 
-Il progetto sarà composto da 4 parti:
+The project will consist of four parts:
 
 ### Scraping ###
 
-La prima fase del progetto prevede la selezione di fonti di dati appropriate e l'implementazione di script per l'estrazione dei dati. I dati sono composti da due parti principali:
+The initial phase involves selecting appropriate data sources and implementing scripts for data extraction. The data comprises two main components:
 
-* Dati Testuali di Reddit: Post e commenti dal subreddit selezionato (ad esempio, r/wallstreetbets) relativi a discussioni su azioni.
-* Dati Storici delle Azioni: Dati storici delle azioni menzionate nei post del subreddit, inclusi prezzi, volume e altri indicatori finanziari.
+   * Reddit Textual Data: Posts and comments from the selected subreddit (e.g., r/wallstreetbets) related to stock discussions.
+   * Historical Stock Data: Historical data of the stocks mentioned in the subreddit posts, including prices, volume, and other financial indicators.
   
 ### Data Cleaning ed Analisi ###
 
-Questa fase include l'implementazione di vari modelli analitici:
+This phase includes implementing various analytical models:
 
-* Analisi del Sentimento: Classifica il sentimento (positivo, negativo, neutro) dei post e dei commenti.
-* Analisi delle Emozioni: Suddivide ulteriormente il sentimento in emozioni specifiche (ad esempio, rabbia, gioia, paura) per ottenere approfondimenti più dettagliati.
-* Topic Modeling: Utilizzo di tecniche come la Latent Dirichlet Allocation (LDA) per identificare i principali argomenti discussi in relazione alle azioni selezionate.
+   * Sentiment Analysis: Classifies the sentiment (positive, negative, neutral) of the posts and comments.
+   * Emotion Analysis: Further divides sentiment into specific emotions (e.g., anger, joy, fear) to gain more detailed insights.
+   * Topic Modeling: Uses techniques like Latent Dirichlet Allocation (LDA) to identify the main topics discussed in relation to the selected stocks.
 
 ### Ottimizzazione delle Analisi ###
 
-Questa fase si concentra sul miglioramento dell'accuratezza e dell'efficacia delle analisi:
+This phase focuses on improving the accuracy and effectiveness of the analyses:
 
-* Ottimizzazione LDA.
-* Ottimizzazione dell'Accuratezza del Sentiment.
+   * LDA Optimization: Refining the topic modeling for better topic identification.
+   * Sentiment Accuracy Optimization: Enhancing the precision of sentiment and emotion classification.
 
-### Model ###
+### Model Developement ###
 
-Nella fase finale, viene sviluppato un modello predittivo:
+In the final phase, a predictive model is developed:
 
-* Fasi di addestramento e validazione con parametri ottimizzati.
-* Previsioni finali sulla performance dei titoli.
-* Rappresentazione grafica dei risultati
+   * Training and Validation: Using optimized parameters for model training and validation.
+   * Final Predictions: Making forecasts on the performance of the stocks.
+   * Graphical Representation: Presenting the results through visualizations
 
 ### Who do I talk to? ###
 
-* Domenico Elio Bressanello - 11/82/00309
 * d.bressanello@studenti.unica.it
