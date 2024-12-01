@@ -3,9 +3,10 @@ from yfinance_Scraper import FinanceScraper
 
 def main():
     # configuration of the credentials necessary to query the reddit api
+    # make sure to insert the correct app client id and secret - these only referred to the app created for this project and are no longer active
     client_id = 'IlozIqdb7QyZ0N-BskbGOQ'
     client_secret = 'Bmek46b7v4OKSzsDToati-83Jf1bnA'
-    user_agent = 'windows:IlozIqdb7QyZ0N-BskbGOQ:v0.1 (by u/_Domenico)'
+    user_agent = 'windows:IlozIqdb7QyZ0N-BskbGOQ:v0.1 (by u/username)'
 
     # creating the instance of the class reddit scraper
     reddit_scraper = RedditScraper(
